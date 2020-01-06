@@ -1,6 +1,7 @@
 
 const path = require("path")
 const webpack = require("webpack")
+const HTMLWebpackPlugin = require("html-webpack-plugin")
 
 module.exports = {
 	entry: {
@@ -24,58 +25,28 @@ module.exports = {
 		rules: [
 			{
 				test: /\.js$/,
-				use: [
-					{
-						loader: "babel-loader"
-					}
-				],
-				exclude: /node_modules/
+				exclude: /node_modules/,
+				use: [{ loader: "babel-loader" }]
 			},
 			{
 				test: /\.css$/,
-				use: [
-					{
-						loader: "style-loader"
-					},
-					{
-						loader: "css-loader"
-					}
-				]
+				use: [{ loader: "style-loader" }, { loader: "css-loader" }]
+			},
+			{
+				test: /\.jpg$/,
+				use: [{ loader: "file-loader", options: { name: "images/[name].[ext]" } }]
 			},
 			{
 				test: /\.html$/,
-				use: [
-					{
-						loader: "file-loader",
-						options: {
-							name: "[name].html"
-						}
-					},
-					{
-						loader: "extract-loader"
-					},
-					{
-						loader: "html-loader",
-						options: {
-							attrs: ["img:src"]
-						}
-					}
-				]
-			},
-			{
-				test: /\.(jpg|gif|png)$/,
-				use: [
-					{
-						loader: "file-loader",
-						options: {
-							name: "images/[name].[ext]"
-						}
-					}
-				]
+				use: [{ loader: "html-loader" }]
 			}
 		]
 	},
 	plugins: [
-		new webpack.HotModuleReplacementPlugin()
+		new webpack.HotModuleReplacementPlugin(),
+		new HTMLWebpackPlugin({
+			template: "./src/index.html",
+			inject: false
+		})
 	]
 }
